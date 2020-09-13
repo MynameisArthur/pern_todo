@@ -57,6 +57,21 @@ app.put('/todos/:id', async (req, res) => {
         console.error(err.message);
     }
 });
+app.delete('/todos/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const deleteTodo = await pool.query(
+            'DELETE FROM todo WHERE todo_id = $1',
+            [id]
+        );
+        res.status(200).json({
+            success: true,
+            data: {msg: 'todo removed', deleteTodo},
+        });
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 app.listen('5000', () => {
     console.log(`Server has started on PORT 5000`);
