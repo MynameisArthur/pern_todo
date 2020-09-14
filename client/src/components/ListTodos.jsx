@@ -11,9 +11,23 @@ const ListTodos = () => {
             console.error(err);
         }
     };
-    useState(() => {
+    useEffect(() => {
         loadTodos();
-    }, []);
+    }, [todos]);
+    const deleteTodo = async (id) => {
+        try {
+            const deleteTodo = await fetch(
+                `http://localhost:5000/todos/${id}`,
+                {
+                    method: 'DELETE',
+                }
+            );
+            setTodos(todos.filter((todo) => todo.id !== id));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <>
             {' '}
@@ -30,7 +44,14 @@ const ListTodos = () => {
                         <tr key={todo.todo_id}>
                             <td>{todo.description}</td>
                             <td>EDIT</td>
-                            <td>DELETE</td>
+                            <td>
+                                <button
+                                    className='btn btn-danger'
+                                    onClick={() => deleteTodo(todo.todo_id)}
+                                >
+                                    DELETE
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
